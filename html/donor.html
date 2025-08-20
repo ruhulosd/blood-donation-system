@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Management - Blood Donation System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b6b;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 76px;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+        
+        .donor-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .donor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .blood-badge {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 50px;
+        }
+        
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        
+        .availability-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .donor-search {
+            position: relative;
+        }
+        
+        .donor-search .form-control {
+            padding-left: 40px;
+        }
+        
+        .donor-search i {
+            position: absolute;
+            left: 15px;
+            top: 12px;
+            color: #6c757d;
+        }
+        
+        .action-buttons .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons .btn {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .stats-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.php"><i class="fas fa-tint me-2"></i>Blood Donation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="donor.php">Donors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="blood_bank.php">Blood Banks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="emergency.php">Emergency</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.php">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"><i class="fas fa-user-circle me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.php"><i class="fas fa-user-plus me-1"></i>Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="container page-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1>Donor Management</h1>
+                <p class="lead">Find and connect with blood donors in your area</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="register.php" class="btn btn-light"><i class="fas fa-plus me-1"></i> Become a Donor</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Stats Section -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-primary">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <div class="stats-number">1,245</div>
+                    <p>Total Donors</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-success">
+                    <i class="fas fa-heartbeat fa-2x mb-2"></i>
+                    <div class="stats-number">856</div>
+                    <p>Active Donors</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-info">
+                    <i class="fas fa-tint fa-2x mb-2"></i>
+                    <div class="stats-number">356</div>
+                    <p>Donations This Month</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-warning">
+                    <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
+                    <div class="stats-number">42</div>
+                    <p>Urgent Needs</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="donor-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Search donors by name or location...">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <select class="form-select" id="bloodGroupFilter">
+                        <option value="">All Blood Types</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <select class="form-select" id="locationFilter">
+                        <option value="">All Locations</option>
+                        <option value="dhaka">Dhaka</option>
+                        <option value="chittagong">Chittagong</option>
+                        <option value="khulna">Khulna</option>
+                        <option value="rajshahi">Rajshahi</option>
+                        <option value="sylhet">Sylhet</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary"><i class="fas fa-filter me-1"></i> Apply Filters</button>
+                    <button class="btn btn-outline-secondary"><i class="fas fa-sync-alt me-1"></i> Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donor Profiles -->
+        <h3 class="mb-4">Available Donors</h3>
+        
+        <div class="row">
+            <!-- Donor 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h4>Robert Johnson</h4>
+                        <span class="blood-badge bg-danger">O+</span>
+                        <p class="mt-3"><i class="fas fa-map-marker-alt me-2"></i> Dhaka, Bangladesh</p>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="availability-badge bg-success">Available</span>
+                        </div>
+                        
+                        <div class="donor-info mb-3">
+                            <div><i class="fas fa-venus-mars me-2"></i> Male</div>
+                            <div><i class="fas fa-birthday-cake me-2"></i> 28 years old</div>
+                            <div><i class="fas fa-clock me-2"></i> Last donation: 2 months ago</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm"><i class="fas fa-envelope me-1"></i> Contact</button>
+                            <button class="btn btn-outline-danger btn-sm"><i class="fas fa-heart me-1"></i> Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donor 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h4>Sarah Williams</h4>
+                        <span class="blood-badge bg-danger">A+</span>
+                        <p class="mt-3"><i class="fas fa-map-marker-alt me-2"></i> Chittagong, Bangladesh</p>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="availability-badge bg-success">Available</span>
+                        </div>
+                        
+                        <div class="donor-info mb-3">
+                            <div><i class="fas fa-venus me-2"></i> Female</div>
+                            <div><i class="fas fa-birthday-cake me-2"></i> 32 years old</div>
+                            <div><i class="fas fa-clock me-2"></i> Last donation: 1 month ago</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm"><i class="fas fa-envelope me-1"></i> Contact</button>
+                            <button class="btn btn-outline-danger btn-sm"><i class="fas fa-heart me-1"></i> Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donor 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h4>Michael Brown</h4>
+                        <span class="blood-badge bg-danger">B+</span>
+                        <p class="mt-3"><i class="fas fa-map-marker-alt me-2"></i> Sylhet, Bangladesh</p>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="availability-badge bg-secondary">Unavailable</span>
+                        </div>
+                        
+                        <div class="donor-info mb-3">
+                            <div><i class="fas fa-venus-mars me-2"></i> Male</div>
+                            <div><i class="fas fa-birthday-cake me-2"></i> 35 years old</div>
+                            <div><i class="fas fa-clock me-2"></i> Last donation: 3 months ago</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm" disabled><i class="fas fa-envelope me-1"></i> Contact</button>
+                            <button class="btn btn-outline-secondary btn-sm" disabled><i class="fas fa-heart me-1"></i> Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donor 4 -->
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h4>Jennifer Lee</h4>
+                        <span class="blood-badge bg-danger">AB-</span>
+                        <p class="mt-3"><i class="fas fa-map-marker-alt me-2"></i> Khulna, Bangladesh</p>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="availability-badge bg-success">Available</span>
+                        </div>
+                        
+                        <div class="donor-info mb-3">
+                            <div><i class="fas fa-venus me-2"></i> Female</div>
+                            <div><i class="fas fa-birthday-cake me-2"></i> 29 years old</div>
+                            <div><i class="fas fa-clock me-2"></i> Last donation: 6 weeks ago</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm"><i class="fas fa-envelope me-1"></i> Contact</button>
+                            <button class="btn btn-outline-danger btn-sm"><i class="fas fa-heart me-1"></i> Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donor 5 -->
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h4>David Chen</h4>
+                        <span class="blood-badge bg-danger">O-</span>
+                        <p class="mt-3"><i class="fas fa-map-marker-alt me-2"></i> Rajshahi, Bangladesh</p>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="availability-badge bg-warning">Limited</span>
+                        </div>
+                        
+                        <div class="donor-info mb-3">
+                            <div><i class="fas fa-venus-mars me-2"></i> Male</div>
+                            <div><i class="fas fa-birthday-cake me-2"></i> 42 years old</div>
+                            <div><i class="fas fa-clock me-2"></i> Last donation: 2 weeks ago</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm"><i class="fas fa-envelope me-1"></i> Contact</button>
+                            <button class="btn btn-outline-danger btn-sm"><i class="fas fa-heart me-1"></i> Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donor 6 -->
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/women/23.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h4>Maria Garcia</h4>
+                        <span class="blood-badge bg-danger">A-</span>
+                        <p class="mt-3"><i class="fas fa-map-marker-alt me-2"></i> Dhaka, Bangladesh</p>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="availability-badge bg-success">Available</span>
+                        </div>
+                        
+                        <div class="donor-info mb-3">
+                            <div><i class="fas fa-venus me-2"></i> Female</div>
+                            <div><i class="fas fa-birthday-cake me-2"></i> 31 years old</div>
+                            <div><i class="fas fa-clock me-2"></i> Last donation: 1 month ago</div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm"><i class="fas fa-envelope me-1"></i> Contact</button>
+                            <button class="btn btn-outline-danger btn-sm"><i class="fas fa-heart me-1"></i> Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Donor pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Blood Donation</h5>
+                    <p>We are dedicated to connecting blood donors with those in need, saving lives one donation at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="donor.php">Donors</a></li>
+                        <li><a href="blood_bank.php">Blood Banks</a></li>
+                        <li><a href="emergency.php">Emergency</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Information</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.php">About Us</a></li>
+                        <li><a href="contact.php">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Contact Information</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Blood Donation Street, City, Country</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 234 567 8900</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@blooddonation.org</li>
+                        <li><i class="fas fa-clock me-2"></i> Monday - Friday: 9AM - 5PM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-0 mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Blood Donation Management System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> for humanity</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const bloodGroupFilter = document.getElementById('bloodGroupFilter');
+            const locationFilter = document.getElementById('locationFilter');
+            const donorCards = document.querySelectorAll('.donor-card');
+            
+            function filterDonors() {
+                const bloodValue = bloodGroupFilter.value;
+                const locationValue = locationFilter.value;
+                
+                donorCards.forEach(card => {
+                    const bloodType = card.querySelector('.blood-badge').textContent;
+                    const location = card.querySelector('.donor-info').textContent;
+                    
+                    const bloodMatch = !bloodValue || bloodType === bloodValue;
+                    const locationMatch = !locationValue || location.toLowerCase().includes(locationValue);
+                    
+                    if (bloodMatch && locationMatch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+            
+            bloodGroupFilter.addEventListener('change', filterDonors);
+            locationFilter.addEventListener('change', filterDonors);
+            
+            // Animate stats numbers
+            const statNumbers = document.querySelectorAll('.stats-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = Math.ceil(target / 50);
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = current;
+                    }
+                }, 30);
+            });
+        });
+    </script>
+</body>
+</html>

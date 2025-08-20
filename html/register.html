@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Blood Donation Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b6b;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(rgba(220, 53, 69, 0.05), rgba(220, 53, 69, 0.1)), url('https://images.unsplash.com/photo-1576669801071-5d5bd7a2c934?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .register-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 900px;
+            max-width: 100%;
+            min-height: 550px;
+        }
+        
+        .register-left {
+            background: linear-gradient(rgba(220, 53, 69, 0.8), rgba(220, 53, 69, 0.7)), url('https://images.unsplash.com/photo-1576669801071-5d5bd7a2c934?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .register-right {
+            padding: 40px;
+        }
+        
+        .register-heading {
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+        
+        .feature-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list i {
+            background-color: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        
+        .btn-register {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 10px 0;
+            font-weight: 600;
+            color: white;
+            border-radius: 5px;
+            width: 100%;
+        }
+        
+        .btn-register:hover {
+            background-color: #c82333;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+        
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        .alert {
+            border-radius: 5px;
+            border: none;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        @media (max-width: 768px) {
+            .register-left {
+                display: none;
+            }
+            
+            body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <div class="row no-gutters">
+                <div class="col-md-5 register-left">
+                    <h2 class="text-center">Join Our Community</h2>
+                    <p class="text-center">Become a part of our life-saving mission</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-heart"></i> Save up to 3 lives with each donation</li>
+                        <li><i class="fas fa-tint"></i> Help address critical blood shortages</li>
+                        <li><i class="fas fa-users"></i> Join a community of dedicated donors</li>
+                        <li><i class="fas fa-bell"></i> Get notified about urgent needs</li>
+                        <li><i class="fas fa-certificate"></i> Receive donor recognition</li>
+                    </ul>
+                    <div class="text-center">
+                        <p>Already have an account?</p>
+                        <a href="login.php" class="btn btn-outline-light">Login Now</a>
+                    </div>
+                </div>
+                <div class="col-md-7 register-right">
+                    <h3 class="register-heading">Create Your Account</h3>
+                    
+                    <!-- PHP error/success messages -->
+                    <div id="message-container">
+                        <?php if(isset($error)): ?>
+                            <div class="alert alert-danger"><?php echo $error; ?></div>
+                        <?php endif; ?>
+                        
+                        <?php if(isset($success)): ?>
+                            <div class="alert alert-success"><?php echo $success; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <form method="POST" action="" id="registrationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Password *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                                <div class="password-strength mt-2">
+                                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                                </div>
+                                <small id="passwordHelp" class="form-text text-muted">Use 8+ characters with mix of letters, numbers & symbols</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm_password" class="form-label">Confirm Password *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                </div>
+                                <small id="confirmPasswordHelp" class="form-text text-muted"></small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="user_type" class="form-label">I want to register as: *</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="user_type" id="donor" value="donor" checked>
+                                    <label class="form-check-label" for="donor">
+                                        <i class="fas fa-user fa-fw"></i> Blood Donor
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="user_type" id="bank" value="bank">
+                                    <label class="form-check-label" for="bank">
+                                        <i class="fas fa-hospital fa-fw"></i> Blood Bank
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" name="register" class="btn btn-register">Create Account</button>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Already have an account? <a href="login.php">Sign In</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm_password');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const passwordHelp = document.getElementById('passwordHelp');
+            const confirmPasswordHelp = document.getElementById('confirmPasswordHelp');
+            const form = document.getElementById('registrationForm');
+            
+            // Password strength indicator
+            password.addEventListener('input', function() {
+                const val = password.value;
+                const strength = checkPasswordStrength(val);
+                
+                // Update strength bar
+                strengthBar.style.width = strength.percentage + '%';
+                
+                if (val.length === 0) {
+                    strengthBar.style.backgroundColor = '#eee';
+                    passwordHelp.textContent = 'Use 8+ characters with mix of letters, numbers & symbols';
+                    passwordHelp.className = 'form-text text-muted';
+                } else {
+                    strengthBar.style.backgroundColor = strength.color;
+                    passwordHelp.textContent = strength.message;
+                    passwordHelp.className = 'form-text ' + strength.textClass;
+                }
+            });
+            
+            // Confirm password validation
+            confirmPassword.addEventListener('input', function() {
+                if (confirmPassword.value !== password.value) {
+                    confirmPasswordHelp.textContent = 'Passwords do not match';
+                    confirmPasswordHelp.className = 'form-text text-danger';
+                    confirmPassword.classList.add('is-invalid');
+                } else {
+                    confirmPasswordHelp.textContent = 'Passwords match';
+                    confirmPasswordHelp.className = 'form-text text-success';
+                    confirmPassword.classList.remove('is-invalid');
+                }
+                
+                if (confirmPassword.value.length === 0) {
+                    confirmPasswordHelp.textContent = '';
+                }
+            });
+            
+            // Form validation
+            form.addEventListener('submit', function(e) {
+                let valid = true;
+                
+                // Check if passwords match
+                if (password.value !== confirmPassword.value) {
+                    confirmPasswordHelp.textContent = 'Passwords do not match';
+                    confirmPasswordHelp.className = 'form-text text-danger';
+                    confirmPassword.classList.add('is-invalid');
+                    valid = false;
+                }
+                
+                // Check password strength
+                const strength = checkPasswordStrength(password.value);
+                if (strength.percentage < 60) {
+                    passwordHelp.textContent = 'Please choose a stronger password';
+                    passwordHelp.className = 'form-text text-danger';
+                    valid = false;
+                }
+                
+                if (!valid) {
+                    e.preventDefault();
+                    
+                    // Show error message at the top
+                    const messageContainer = document.getElementById('message-container');
+                    messageContainer.innerHTML = '<div class="alert alert-danger">Please fix the errors in the form.</div>';
+                    
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                }
+            });
+            
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                let messages = [];
+                
+                // Length check
+                if (password.length < 8) {
+                    messages.push('Too short');
+                } else {
+                    strength += 25;
+                }
+                
+                // Contains both lower and uppercase characters
+                if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) {
+                    strength += 25;
+                } else {
+                    messages.push('Mix of uppercase and lowercase');
+                }
+                
+                // Contains numbers
+                if (password.match(/([0-9])/)) {
+                    strength += 25;
+                } else {
+                    messages.push('Add numbers');
+                }
+                
+                // Contains special characters
+                if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/)) {
+                    strength += 25;
+                } else {
+                    messages.push('Include special characters');
+                }
+                
+                let result = {
+                    percentage: strength,
+                    message: messages.length > 0 ? 'Consider: ' + messages.join(', ') : 'Strong password!',
+                    color: strength < 50 ? '#dc3545' : (strength < 75 ? '#ffc107' : '#28a745'),
+                    textClass: strength < 50 ? 'text-danger' : (strength < 75 ? 'text-warning' : 'text-success')
+                };
+                
+                return result;
+            }
+        });
+    </script>
+</body>
+</html>

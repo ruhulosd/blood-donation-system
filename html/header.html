@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Component - Blood Donation System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b6b;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 80px;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-brand i {
+            margin-right: 5px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            margin: 0 2px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 5px 15px;
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .demo-content {
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .login-status {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 992px) {
+            .nav-link {
+                margin: 2px 0;
+            }
+            
+            .user-badge {
+                margin: 10px 0 0 0;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Component -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.php"><i class="fas fa-tint"></i>Blood Donation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.php"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="donor.php"><i class="fas fa-users me-1"></i>Donors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="blood_bank.php"><i class="fas fa-hospital me-1"></i>Blood Banks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="emergency.php"><i class="fas fa-exclamation-circle me-1"></i>Emergency</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.php"><i class="fas fa-info-circle me-1"></i>About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php"><i class="fas fa-envelope me-1"></i>Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <!-- PHP would conditionally show these based on login status -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link user-badge"><i class="fas fa-user me-1"></i>John Doe (Donor)</span>
+                    </li>
+                    <!--
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.php"><i class="fas fa-user-plus me-1"></i>Register</a>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Demo Content -->
+    <div class="container">
+        <div class="demo-content">
+            <h1>Header Component Demo</h1>
+            <p>This demonstrates the header component for the Blood Donation System</p>
+            
+            <div class="login-status">
+                <h4>Login Status Simulation</h4>
+                <p>This header shows how it would appear when a user is logged in. The PHP code would conditionally display:</p>
+                <ul>
+                    <li>Dashboard and Logout links when logged in</li>
+                    <li>Login and Register links when logged out</li>
+                    <li>User badge with name and type when logged in</li>
+                </ul>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" id="showLoggedIn">Show Logged In State</button>
+                    <button type="button" class="btn btn-secondary" id="showLoggedOut">Show Logged Out State</button>
+                </div>
+            </div>
+            
+            <h3>Main Content Area</h3>
+            <p>This is where your main page content would appear. The header remains fixed at the top of the page.</p>
+            <p>The header includes:</p>
+            <ul>
+                <li>Responsive navigation that collapses on mobile devices</li>
+                <li>Brand logo with icon</li>
+                <li>Main navigation links</li>
+                <li>User account links (changes based on login status)</li>
+                <li>User role badge when logged in</li>
+            </ul>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>PHP Integration Code</h4>
+                </div>
+                <div class="card-body">
+                    <p>The header uses PHP to conditionally display content based on login status:</p>
+                    <pre><code>&lt;?php
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user_id']);
+$userType = $isLoggedIn ? $_SESSION['user_type'] : '';
+?&gt;
+
+&lt;?php if($isLoggedIn): ?&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link" href="dashboard.php"&gt;Dashboard&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link" href="logout.php"&gt;Logout&lt;/a&gt;
+    &lt;/li&gt;
+&lt;?php else: ?&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link" href="login.php"&gt;Login&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a class="nav-link" href="register.php"&gt;Register&lt;/a&gt;
+    &lt;/li&gt;
+&lt;?php endif; ?&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate login state changes for demo purposes
+            const showLoggedIn = document.getElementById('showLoggedIn');
+            const showLoggedOut = document.getElementById('showLoggedOut');
+            
+            showLoggedIn.addEventListener('click', function() {
+                // This would be handled by PHP in a real application
+                alert('In a real application, the PHP code would show Dashboard and Logout links when the user is logged in.');
+            });
+            
+            showLoggedOut.addEventListener('click', function() {
+                // This would be handled by PHP in a real application
+                alert('In a real application, the PHP code would show Login and Register links when the user is logged out.');
+            });
+            
+            // Highlight active link based on current page
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('href');
+                if (linkPage === currentPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

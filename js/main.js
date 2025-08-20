@@ -1,113 +1,67 @@
-// Mobile menu toggle
+// JavaScript for Blood Donation Management System
 document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuBtn = document.querySelector('.mobile-menu');
-    const nav = document.querySelector('nav ul');
-    
-    if (mobileMenuBtn && nav) {
-        mobileMenuBtn.addEventListener('click', function() {
-            nav.classList.toggle('show');
-        });
-    }
-
-    // Close mobile menu when clicking on a link
-    const navLinks = document.querySelectorAll('nav ul li a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            nav.classList.remove('show');
-        });
-    });
-
-    // Form validation for all forms
+    // Form validation
     const forms = document.querySelectorAll('form');
+    
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
+            let valid = true;
+            const inputs = this.querySelectorAll('input[required], select[required], textarea[required]');
             
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.style.borderColor = 'red';
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    valid = false;
+                    input.classList.add('is-invalid');
                 } else {
-                    field.style.borderColor = '#ddd';
+                    input.classList.remove('is-invalid');
                 }
             });
-
-            if (!isValid) {
+            
+            if (!valid) {
                 e.preventDefault();
-                alert('Please fill in all required fields.');
+                alert('Please fill all required fields.');
             }
         });
     });
-
-    // Password confirmation validation
-    const passwordForms = document.querySelectorAll('form[data-password-confirm="true"]');
-    passwordForms.forEach(form => {
-        const password = form.querySelector('#password');
-        const confirmPassword = form.querySelector('#confirm_password');
-        
-        if (password && confirmPassword) {
-            form.addEventListener('submit', function(e) {
-                if (password.value !== confirmPassword.value) {
-                    e.preventDefault();
-                    alert('Passwords do not match!');
-                    confirmPassword.focus();
-                }
-            });
-        }
-    });
-
-    // Date validation for donor registration
-    const donorForm = document.getElementById('donorForm');
-    if (donorForm) {
-        donorForm.addEventListener('submit', function(e) {
-            const dob = new Date(document.getElementById('dob').value);
-            const today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                age--;
+    
+    // Remove validation styles when user starts typing
+    const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+    
+    requiredFields.forEach(field => {
+        field.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
             }
-            
-            if (age < 18 || age > 65) {
-                e.preventDefault();
-                alert('Donors must be between 18 and 65 years old.');
+        });
+    });
+    
+    // Emergency request urgency level color coding
+    const urgencySelect = document.getElementById('urgency_level');
+    if (urgencySelect) {
+        urgencySelect.addEventListener('change', function() {
+            this.className = 'form-select';
+            if (this.value === 'Critical') {
+                this.classList.add('bg-danger', 'text-white');
+            } else if (this.value === 'High') {
+                this.classList.add('bg-warning', 'text-dark');
+            } else if (this.value === 'Medium') {
+                this.classList.add('bg-info', 'text-white');
+            } else if (this.value === 'Low') {
+                this.classList.add('bg-success', 'text-white');
             }
         });
     }
-
-    // Date validation for blood request
-    const requestForm = document.getElementById('requestForm');
-    if (requestForm) {
-        requestForm.addEventListener('submit', function(e) {
-            const requestDate = new Date(document.getElementById('request_date').value);
-            const requiredDate = new Date(document.getElementById('required_date').value);
-            
-            if (requiredDate < requestDate) {
-                e.preventDefault();
-                alert('Required date cannot be before request date!');
-            }
-            
-            const units = parseInt(document.getElementById('units_required').value);
-            if (units < 1) {
-                e.preventDefault();
-                alert('Units required must be at least 1!');
-            }
+    
+    // Blood group selection enhancement
+    const bloodGroupSelects = document.querySelectorAll('select[name*="blood_group"]');
+    
+    bloodGroupSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            this.className = 'form-select';
+            this.classList.add('bg-danger', 'text-white');
         });
-    }
-
-    // Initialize date fields
-    const dateFields = document.querySelectorAll('input[type="date"]');
-    dateFields.forEach(field => {
-        if (!field.value) {
-            field.valueAsDate = new Date();
-        }
     });
+    
+    // Dashboard charts (placeholder for real charts)
+    console.log('Blood Donation System loaded successfully');
 });
-
-// Format date for display
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-}

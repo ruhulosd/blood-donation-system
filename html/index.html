@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b6b;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 76px;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://images.unsplash.com/photo-1576669801071-5d5bd7a2c934?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+            color: #333;
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .blood-card {
+            transition: transform 0.3s;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        
+        .blood-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .blood-stats .card {
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .emergency-box {
+            background-color: #fff3f3;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .social-links a {
+            color: white;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .blood-group {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .availability-high {
+            color: #28a745;
+        }
+        
+        .availability-medium {
+            color: #ffc107;
+        }
+        
+        .availability-low {
+            color: #dc3545;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .donor-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        
+        .donor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 0;
+            }
+            
+            .display-4 {
+                font-size: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-tint me-2"></i>Blood Donation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Donors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Blood Banks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Emergency</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"><i class="fas fa-user-circle me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.php"><i class="fas fa-user-plus me-1"></i>Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="container mt-5">
+        <div class="hero-section">
+            <div class="container">
+                <h1 class="display-4 fw-bold text-danger">Save Lives, Donate Blood</h1>
+                <p class="lead">Join our community of blood donors and help those in need of life-saving blood donations.</p>
+                <a href="register.php" class="btn btn-danger btn-lg me-2">Become a Donor</a>
+                <a href="emergency.php" class="btn btn-outline-danger btn-lg">Emergency Request</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Alert -->
+    <div class="container">
+        <div class="emergency-box">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h4><i class="fas fa-exclamation-circle me-2"></i>Emergency Blood Need</h4>
+                    <p class="mb-0">Urgent need for O+ blood type at City Hospital. Please contact 0123456789 if you can help.</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <a href="emergency.php" class="btn btn-danger">Respond Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="container py-5">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="card blood-card">
+                    <div class="card-body">
+                        <div class="stat-number">1,245</div>
+                        <p>Registered Donors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="card blood-card">
+                    <div class="card-body">
+                        <div class="stat-number">356</div>
+                        <p>Lives Saved</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="card blood-card">
+                    <div class="card-body">
+                        <div class="stat-number">42</div>
+                        <p>Blood Banks</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="card blood-card">
+                    <div class="card-body">
+                        <div class="stat-number">38</div>
+                        <p>Emergency Requests</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container py-5 bg-light">
+        <h2 class="section-title">Why Donate Blood?</h2>
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h4>Save Lives</h4>
+                <p>Your blood donation can save up to three lives. Every donation counts and makes a significant impact.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h4>Health Benefits</h4>
+                <p>Donating blood reduces the risk of heart disease and helps in the production of new blood cells.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Community Support</h4>
+                <p>Join a community of dedicated donors who are committed to helping others in times of need.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Availability -->
+    <div class="container py-5">
+        <h2 class="section-title">Current Blood Availability</h2>
+        <div class="row text-center">
+            <?php
+            // Simulating the PHP code for blood availability
+            $bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+            
+            foreach($bloodGroups as $group) {
+                // In a real application, you would query the database for actual counts
+                $count = rand(10, 50); // Random count for demonstration
+                $status = $count > 20 ? 'Good' : ($count > 10 ? 'Medium' : 'Low');
+                $statusClass = $status == 'Good' ? 'success' : ($status == 'Medium' ? 'warning' : 'danger');
+                
+                echo "<div class='col-md-3 col-6 mb-4'>
+                    <div class='card blood-card'>
+                        <div class='card-body'>
+                            <h5 class='card-title blood-group'>{$group}</h5>
+                            <p class='card-text display-6'>{$count}</p>
+                            <span class='badge bg-{$statusClass}'>{$status}</span>
+                        </div>
+                    </div>
+                </div>";
+            }
+            ?>
+        </div>
+    </div>
+
+    <!-- Recent Donors -->
+    <div class="container py-5 bg-light">
+        <h2 class="section-title">Recent Donors</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h5>Robert Johnson</h5>
+                        <p class="text-danger">O+</p>
+                        <p class="text-muted">Last donated: 2 months ago</p>
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-danger">Request Blood</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h5>Sarah Williams</h5>
+                        <p class="text-danger">A+</p>
+                        <p class="text-muted">Last donated: 1 month ago</p>
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-danger">Request Blood</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card donor-card">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="Donor" class="rounded-circle mb-3" width="100">
+                        <h5>Michael Brown</h5>
+                        <p class="text-danger">B+</p>
+                        <p class="text-muted">Last donated: 3 months ago</p>
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-danger">Request Blood</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-danger">View All Donors</a>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2>Ready to Make a Difference?</h2>
+                <p class="lead">Join our network of blood donors today and help save lives in your community.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="register.php" class="btn btn-danger btn-lg me-2">Register Now</a>
+                <a href="#" class="btn btn-outline-danger btn-lg">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Blood Donation</h5>
+                    <p>We are dedicated to connecting blood donors with those in need, saving lives one donation at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Donors</a></li>
+                        <li><a href="#">Blood Banks</a></li>
+                        <li><a href="#">Emergency</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Information</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Contact Information</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Blood Donation Street, City, Country</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 234 567 8900</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@blooddonation.org</li>
+                        <li><i class="fas fa-clock me-2"></i> Monday - Friday: 9AM - 5PM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-0 mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Blood Donation Management System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> for humanity</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update emergency box with current time
+            const emergencyBox = document.querySelector('.emergency-box');
+            if (emergencyBox) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString();
+                emergencyBox.querySelector('p').textContent += ` (Updated: ${timeString})`;
+            }
+            
+            // Add animation to stats counter (simplified version)
+            const statElements = document.querySelectorAll('.stat-number');
+            statElements.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = Math.ceil(target / 50);
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = current;
+                    }
+                }, 30);
+            });
+            
+            // Blood card hover effect
+            const bloodCards = document.querySelectorAll('.blood-card');
+            bloodCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 8px 16px rgba(0,0,0,0.2)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

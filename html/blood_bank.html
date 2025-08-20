@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Banks - Blood Donation Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b6b;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 76px;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+        
+        .bloodbank-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .bloodbank-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bloodbank-img {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .bloodbank-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .blood-inventory {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .blood-group-bar {
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            background-color: #e9ecef;
+        }
+        
+        .blood-group-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .bloodbank-search {
+            position: relative;
+        }
+        
+        .bloodbank-search .form-control {
+            padding-left: 40px;
+        }
+        
+        .bloodbank-search i {
+            position: absolute;
+            left: 15px;
+            top: 12px;
+            color: #6c757d;
+        }
+        
+        .map-container {
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-number {
+                font-size: 2rem;
+            }
+            
+            .bloodbank-img {
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.php"><i class="fas fa-tint me-2"></i>Blood Donation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="donor.php">Donors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="blood_bank.php">Blood Banks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="emergency.php">Emergency</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.php">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"><i class="fas fa-user-circle me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.php"><i class="fas fa-user-plus me-1"></i>Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="container page-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1>Blood Bank Directory</h1>
+                <p class="lead">Find blood banks near you and check their inventory</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="register.php?type=bank" class="btn btn-light"><i class="fas fa-hospital me-1"></i> Register Blood Bank</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Stats Section -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-primary">
+                    <i class="fas fa-hospital fa-2x mb-2"></i>
+                    <div class="stats-number">42</div>
+                    <p>Total Blood Banks</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-success">
+                    <i class="fas fa-tint fa-2x mb-2"></i>
+                    <div class="stats-number">1,856</div>
+                    <p>Units Available</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-info">
+                    <i class="fas fa-map-marker-alt fa-2x mb-2"></i>
+                    <div class="stats-number">15</div>
+                    <p>Cities Covered</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-card bg-warning">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <div class="stats-number">24/7</div>
+                    <p>Emergency Services</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-5 mb-3">
+                    <div class="bloodbank-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Search blood banks by name or location...">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <select class="form-select" id="bloodGroupFilter">
+                        <option value="">All Blood Types</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <select class="form-select" id="cityFilter">
+                        <option value="">All Cities</option>
+                        <option value="dhaka">Dhaka</option>
+                        <option value="chittagong">Chittagong</option>
+                        <option value="khulna">Khulna</option>
+                        <option value="rajshahi">Rajshahi</option>
+                        <option value="sylhet">Sylhet</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <button class="btn btn-primary w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="map-container">
+                    <div class="text-center">
+                        <i class="fas fa-map-marked-alt fa-3x mb-3"></i>
+                        <h4>Blood Bank Locations</h4>
+                        <p>Interactive map showing all blood banks in your area</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blood Bank Listings -->
+        <h3 class="mb-4">Available Blood Banks</h3>
+        
+        <div class="row">
+            <!-- Blood Bank 1 -->
+            <div class="col-md-6 mb-4">
+                <div class="card bloodbank-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top bloodbank-img" alt="Blood Bank">
+                        <span class="bloodbank-status bg-success">Open Now</span>
+                    </div>
+                    <div class="card-body">
+                        <h4>Dhaka Central Blood Bank</h4>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i> Gulshan, Dhaka</p>
+                        
+                        <div class="blood-inventory">
+                            <h6>Blood Inventory:</h6>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>A+</span>
+                                    <span>25 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>B+</span>
+                                    <span>18 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>O+</span>
+                                    <span>8 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-warning" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>AB-</span>
+                                    <span>3 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-danger" style="width: 15%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-directions me-1"></i> Directions</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-phone me-1"></i> Contact</a>
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-info-circle me-1"></i> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blood Bank 2 -->
+            <div class="col-md-6 mb-4">
+                <div class="card bloodbank-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top bloodbank-img" alt="Blood Bank">
+                        <span class="bloodbank-status bg-success">Open Now</span>
+                    </div>
+                    <div class="card-body">
+                        <h4>Chittagong Blood Center</h4>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i> Agrabad, Chittagong</p>
+                        
+                        <div class="blood-inventory">
+                            <h6>Blood Inventory:</h6>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>B+</span>
+                                    <span>32 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>O+</span>
+                                    <span>22 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>A-</span>
+                                    <span>12 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-warning" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>AB+</span>
+                                    <span>5 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-warning" style="width: 20%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-directions me-1"></i> Directions</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-phone me-1"></i> Contact</a>
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-info-circle me-1"></i> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blood Bank 3 -->
+            <div class="col-md-6 mb-4">
+                <div class="card bloodbank-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top bloodbank-img" alt="Blood Bank">
+                        <span class="bloodbank-status bg-success">Open Now</span>
+                    </div>
+                    <div class="card-body">
+                        <h4>Khulna Blood Services</h4>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i> Khalishpur, Khulna</p>
+                        
+                        <div class="blood-inventory">
+                            <h6>Blood Inventory:</h6>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>O+</span>
+                                    <span>28 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>A+</span>
+                                    <span>15 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 50%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>B-</span>
+                                    <span>7 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-warning" style="width: 25%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>O-</span>
+                                    <span>4 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-danger" style="width: 15%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-directions me-1"></i> Directions</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-phone me-1"></i> Contact</a>
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-info-circle me-1"></i> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blood Bank 4 -->
+            <div class="col-md-6 mb-4">
+                <div class="card bloodbank-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top bloodbank-img" alt="Blood Bank">
+                        <span class="bloodbank-status bg-secondary">Closed</span>
+                    </div>
+                    <div class="card-body">
+                        <h4>Sylhet Regional Blood Bank</h4>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i> Zindabazar, Sylhet</p>
+                        
+                        <div class="blood-inventory">
+                            <h6>Blood Inventory:</h6>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>A+</span>
+                                    <span>20 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>AB+</span>
+                                    <span>14 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-success" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>O+</span>
+                                    <span>9 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-warning" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>B+</span>
+                                    <span>6 units</span>
+                                </div>
+                                <div class="blood-group-bar">
+                                    <div class="blood-group-fill bg-warning" style="width: 20%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-directions me-1"></i> Directions</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-phone me-1"></i> Contact</a>
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-info-circle me-1"></i> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Blood bank pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Blood Donation</h5>
+                    <p>We are dedicated to connecting blood donors with those in need, saving lives one donation at a time.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="donor.php">Donors</a></li>
+                        <li><a href="blood_bank.php">Blood Banks</a></li>
+                        <li><a href="emergency.php">Emergency</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Information</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.php">About Us</a></li>
+                        <li><a href="contact.php">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Contact Information</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Blood Donation Street, City, Country</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 234 567 8900</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@blooddonation.org</li>
+                        <li><i class="fas fa-clock me-2"></i> Monday - Friday: 9AM - 5PM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-0 mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Blood Donation Management System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> for humanity</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats numbers
+            const statNumbers = document.querySelectorAll('.stats-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/,/g, ''));
+                let current = 0;
+                const increment = Math.ceil(target / 50);
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = current.toLocaleString();
+                    }
+                }, 30);
+            });
+            
+            // Filter functionality
+            const bloodGroupFilter = document.getElementById('bloodGroupFilter');
+            const cityFilter = document.getElementById('cityFilter');
+            const bloodbankCards = document.querySelectorAll('.bloodbank-card');
+            
+            function filterBloodBanks() {
+                const bloodValue = bloodGroupFilter.value;
+                const cityValue = cityFilter.value;
+                
+                bloodbankCards.forEach(card => {
+                    const bloodTypes = card.querySelector('.blood-inventory').textContent;
+                    const location = card.querySelector('.text-muted').textContent;
+                    
+                    const bloodMatch = !bloodValue || bloodTypes.includes(bloodValue);
+                    const cityMatch = !cityValue || location.toLowerCase().includes(cityValue);
+                    
+                    if (bloodMatch && cityMatch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+            
+            bloodGroupFilter.addEventListener('change', filterBloodBanks);
+            cityFilter.addEventListener('change', filterBloodBanks);
+        });
+    </script>
+</body>
+</html>
